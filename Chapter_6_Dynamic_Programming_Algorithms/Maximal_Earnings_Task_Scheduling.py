@@ -1,4 +1,5 @@
 import numpy
+import collections
 from .utils import SafeArray
 
 
@@ -22,21 +23,22 @@ def schedule_tasks_for_max_earnings(high, low):
     n = len(high)
     opt = SafeArray(numpy.zeros(n), default=0)
     opt[0] = max(high[0], low[0])
-    solution = SafeArray([], default=(-1,-1))
+    solution = collections.deque()
 
     DIFFICULT_TASK_LABEL = "difficult"
     EASY_TASK_LABEL = "easy"
 
     for i in range(1, n):
         opt[i] = max(high[i] + opt[i-2], low[i] + opt[i-1])
+    # Restore the solution.
+    i = n - 1
+    while i >= 0:
         if high[i] + opt[i-2] > low[i] + opt[i-1]:
-            last_chosen_task = solution[-1]
-            last_chosen_task_week = last_chosen_task[1]
+            solution.appendleft((DIFFICULT_TASK_LABEL, i))
             # If the optimal solution for the current challenge includes a difficult task
             # in the final week, we cannot select any task in the previous week.
-            if last_chosen_task_week == i - 1:
-                solution.pop()
-            solution.append((DIFFICULT_TASK_LABEL, i))
+            i -= 2
         else:
-            solution.append((EASY_TASK_LABEL, i))
-    return solution
+            solution.appendleft((EASY_TASK_LABEL, i))
+            i -= 1
+    return list(solution)

@@ -1,4 +1,5 @@
 import numpy
+import collections
 from .utils import SafeArray
 
 
@@ -16,25 +17,22 @@ def max_independent_set_path(graph_weights):
     the total weight of the vertices in S is maximized.
     """
 
+    FIRST_VERTEX_INDEX = 0
+    SECOND_VERTEX_INDEX = 1
+
     n = len(graph_weights)
     opt = SafeArray((numpy.zeros(n) - numpy.inf).tolist(), default=0)
-    opt[0] = 0
-    opt[1] = graph_weights[0]
-    solution = SafeArray([], default=-1)
+    opt[0] = graph_weights[0]
+    solution = collections.deque()
 
-    for i in range(2, n):
+    for i in range(1, n):
         opt[i] = max(opt[i-1], graph_weights[i] + opt[i - 2])
-        # Restore the solution.
+    # Restore the solution.
+    i = n - 1
+    while i >= 0:
         if graph_weights[i] + opt[i - 2] > opt[i - 1]:
-            # If the optimal solution contains the last vertex v_i,
-            # we cannot include vertex v_(i-1) in it, if it's already included.
-            if solution[-1] == i-1:
-                solution.pop()
-            solution.append(i)
-    # If the second vertex is not part of the optimal solution and
-    # the first vertex contributes to the total weight, we will include
-    # the first vertex in the solution.
-    if solution[0] != 2 and opt[1] + opt[n-1] > opt[n-1]:
-        solution.appendleft(1)
-    return solution
-
+            solution.appendleft(i)
+            i -= 2
+        else:
+            i -= 1
+    return list(solution)
