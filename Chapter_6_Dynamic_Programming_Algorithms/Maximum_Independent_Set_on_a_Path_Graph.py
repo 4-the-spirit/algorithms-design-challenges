@@ -5,6 +5,7 @@ from .utils import SafeArray
 
 def max_independent_set_path(graph_weights):
     """
+    Question:
     Given a path graph G = (V, E), where each node v_i ∈ V has an assigned weight w_i,
     an independent set S ⊆ V is a subset of vertices such that no two vertices in S
     are adjacent (i.e., there is no edge between any two vertices in S).
@@ -16,9 +17,6 @@ def max_independent_set_path(graph_weights):
     This function finds an independent set S in the path graph G such that
     the total weight of the vertices in S is maximized.
     """
-
-    FIRST_VERTEX_INDEX = 0
-    SECOND_VERTEX_INDEX = 1
 
     n = len(graph_weights)
     opt = SafeArray((numpy.zeros(n) - numpy.inf).tolist(), default=0)
