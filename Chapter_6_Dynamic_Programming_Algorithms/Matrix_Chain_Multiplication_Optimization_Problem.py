@@ -47,7 +47,7 @@ def optimize_matrix_multiplication(dimensions):
             j = i + diff
             minimizing_matrix = i
             for k in range(i, j):
-                optimal_num_of_operations_with_k_in_middle = opt[i, k] + opt[k + 1, j] + row[i] * col[i] * col[j]
+                optimal_num_of_operations_with_k_in_middle = opt[i, k] + opt[k + 1, j] + row[i] * col[k] * col[j]
                 if optimal_num_of_operations_with_k_in_middle < opt[i, j]:
                     opt[i, j] = optimal_num_of_operations_with_k_in_middle
                     minimizing_matrix = k
